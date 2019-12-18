@@ -11,7 +11,8 @@
 - tensorflow用1.15(pip install tensorflow==1.15)
 - 跑出`AttributeError: module 'scipy.misc' has no attribute 'imread'`的話跑
 ```
-sudo pip install --upgrade scipy
+> sudo pip install --upgrade scipy
+> pip install scipy==1.1.0
 ```
 
 ## TODO
