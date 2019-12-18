@@ -33,7 +33,7 @@
 
 #### JPPNet
 
-In our case, **$(working_directory) = /JPP_mod**
+> In our case, **$(working_directory) = /JPP_mod**
 1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **$(working_directory)/checkpoint/**
 2. The images targeted for operation must be under **$(working_directory)/datasets/examples/image/**
 3. Modify **$(working_directory)/datasets/examples/list/val.txt** to include the directories of the images(e.g. **/image/hello_world_man.jpg**).
