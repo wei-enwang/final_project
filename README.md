@@ -1,27 +1,27 @@
-# combination of pose parsing network and GAN
+# Combination of pose parsing network and GAN
 
 計程期末專題
 
 > 把進度和目標寫在這
 
-## 相關資源
+## Related resources
 
 > pre-trained model: https://github.com/Engineering-Course/LIP_JPPNet <br>
-> 多人: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation
+> multi-person: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation
 
-### 可能遇到的問題
+### Common problems running this code
 
-1. 跑 LIP_JPPNet:
+#### JPPNet:
 
-- tensorflow 用 1.15(pip install tensorflow==1.15)
-- 跑出`AttributeError: module 'scipy.misc' has no attribute 'imread'`的話跑
+- we use tensorflow 1.15 here (pip install tensorflow==1.15).
+- when `AttributeError: module 'scipy.misc' has no attribute 'imread'` occurs run
 
 ```
 > sudo pip install --upgrade scipy
 > pip install scipy==1.1.0
 ```
 
-我測試過的檔案放在/JPP_mod 裡面
+我測試過的檔案放在/JPP_mod 裡面，直接用這個就好。
 
 ## TODO
 
@@ -29,7 +29,20 @@
 - [ ] 找到可以抓出照片裡的人的 pretrained model <br>
 - [ ] 將主角結合動作
 
-## Citation
+## How to use our code?
+
+#### JPPNet
+
+In our case, **$(working_directory) = /JPP_mod**
+1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **$(working_directory)/checkpoint/**
+2. The images targeted for operation must be under **$(working_directory)/datasets/examples/image/**
+3. Modify **$(working_directory)/datasets/examples/list/val.txt** to include the directories of the images(e.g. **/image/hello_world_man.jpg**).
+4. Go to file **valuate_pose_JPPNet-s2.py** and **evaluate_parsing_JPPNet-s2.py** and change variable `NUM_STEPS` to the number of images under **$(working_directory)/datasets/examples/image/**
+5. Run `evaluate_pose_JPPNet-s2.py` and `evaluate_parsing_JPPNet-s2.py` for pose estimation and body parts parsing respectively.
+6. Results will be shown under **$(working_directory)/output/**
+
+
+## Reference
 
 ```
 @article{liang2018look,
