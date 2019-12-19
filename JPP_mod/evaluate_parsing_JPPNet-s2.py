@@ -142,9 +142,8 @@ def main():
     # Iterate over training steps.
     for step in range(NUM_STEPS):
         parsing_ = sess.run(pred_all)
-        if step % 100 == 0:
-            print('step {:d}'.format(step))
-            print (image_list[step])
+        print('step {:d}'.format(step))
+        print (image_list[step])
         img_split = image_list[step].split('/')
         img_id = img_split[-1][:-4]
 
