@@ -139,9 +139,8 @@ def main():
     for step in range(NUM_STEPS):
         predict_ = sess.run(output_all)
         save_lip_images(image_list[step], predict_, OUTPUT_DIR)
-        if step % 100 == 0:
-            print('step {:d}'.format(step))
-            print (image_list[step])
+        print('step {:d}'.format(step))
+        print (image_list[step])
 
     coord.request_stop()
     coord.join(threads)
