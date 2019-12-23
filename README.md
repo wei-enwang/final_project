@@ -7,7 +7,8 @@
 ## Related resources
 
 > pre-trained model: https://github.com/Engineering-Course/LIP_JPPNet <br>
-> multi-person: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation
+> multi-person: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation <br>
+> turn pose into body(MV): https://github.com/xrenaa/Music-Dance-Video-Synthesis
 
 ### Common problems running this code
 
