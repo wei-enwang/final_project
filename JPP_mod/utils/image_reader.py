@@ -72,25 +72,30 @@ def random_crop_and_pad_image_and_labels(image, label, crop_h, crop_w, ignore_la
     label_crop.set_shape((crop_h,crop_w, 1))
     return img_crop, label_crop  
 
-def read_labeled_image_list(data_dir, data_list):
+def read_labeled_image_list(data_dir):
     """Reads txt file containing paths to images and ground truth masks.
     
     Args:
       data_dir: path to the directory with images and masks.
-      data_list: path to the file with lines of the form '/path/to/image /path/to/mask'.
+      data_list: path to the file with lines of the form '/path/to/image /path/to/mask'.(removed in this version)
        
     Returns:
       Two lists with all file names for images and masks, respectively.
     """
-    f = open(data_list, 'r')
     images = []
-    for line in f:
-        try:
-            image, mask = line.strip("\n").split(' ')
-        except ValueError: # Adhoc for test.
-            image = line.strip("\n")
-        images.append(data_dir + image)
-    return images
+    for image in os.listdir(data_dir):
+    	if os.path.isfile(os.path.join(data_dir, image)):
+			images.append(data_dir + image)
+	return images
+
+    # f = open(data_list, 'r')
+    # for line in f:
+    #     try:
+    #         image, mask = line.strip("\n").split(' ')
+    #     except ValueError: # Adhoc for test.
+    #         image = line.strip("\n")
+    #     images.append(data_dir + image)
+    # return images
 
 def read_images_from_disk(input_queue, input_size, random_scale, random_mirror): # optional pre-processing arguments
     """Read one image and its corresponding mask with optional pre-processing.
@@ -123,24 +128,23 @@ class ImageReader(object):
        masks from the disk, and enqueues them into a TensorFlow queue.
     '''
 
-    def __init__(self, data_dir, data_list, input_size, random_scale,
+    def __init__(self, data_dir, input_size, random_scale,
                  random_mirror, coord):
         '''Initialise an ImageReader.
         
         Args:
           data_dir: path to the directory with images and masks.
-          data_list: path to the file with lines of the form '/path/to/image /path/to/mask'.
+          data_list: path to the file with lines of the form '/path/to/image /path/to/mask'.(removed in this version)
           input_size: a tuple with (height, width) values, to which all the images will be resized.
           random_scale: whether to randomly scale the images prior to random crop.
           random_mirror: whether to randomly mirror the images prior to random crop.
           coord: TensorFlow queue coordinator.
         '''
         self.data_dir = data_dir
-        self.data_list = data_list
         self.input_size = input_size
         self.coord = coord
 
-        self.image_list = read_labeled_image_list(self.data_dir, self.data_list)
+        self.image_list = read_labeled_image_list(self.data_dir)
         self.images = tf.convert_to_tensor(self.image_list, dtype=tf.string)
         self.queue = tf.train.slice_input_producer([self.images],
                                                    shuffle=input_size is not None) # not shuffling if it is val
