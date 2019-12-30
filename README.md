@@ -27,21 +27,21 @@
 ## TODO
 
 - [x] 找到適合的抓出關節的 pretrained model 並實作 <br>
-- [ ] 找到可以抓出照片裡的人的 pretrained model <br>
+- [ ] 做好可以抓出照片裡的人的 pretrained model <br>
+- [ ] 用 JPP_mod 對照片 dataset 生成的資料訓練 model <br>
 - [ ] 將主角結合動作
 
 ## How to use our code?
 
 #### JPPNet
 
-> In our case, **$(working_directory) = /JPP_mod**
-1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **$(working_directory)/checkpoint/**
-2. The images targeted for operation must be under **$(working_directory)/datasets/examples/image/**
-3. Modify **$(working_directory)/datasets/examples/list/val.txt** to include the directories of the images(e.g. **/image/hello_world_man.jpg**).
-4. Go to file **valuate_pose_JPPNet-s2.py** and **evaluate_parsing_JPPNet-s2.py** and change variable `NUM_STEPS` to the number of images under **$(working_directory)/datasets/examples/image/**
-5. Run `evaluate_pose_JPPNet-s2.py` and `evaluate_parsing_JPPNet-s2.py` for pose estimation and body parts parsing respectively.
-6. Results will be shown under **$(working_directory)/output/**
+> In our case, **\$(working_directory) = /JPP_mod**
 
+1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **\$(working_directory)/checkpoint/**
+2. The images targeted for operation must be under **\$(working_directory)/datasets/examples/image/**
+3. Go to file **valuate_pose_JPPNet-s2.py** and **evaluate_parsing_JPPNet-s2.py** and change variable `NUM_STEPS` to the number of images under **\$(working_directory)/datasets/examples/image/**
+4. Run `evaluate_pose_JPPNet-s2.py` and `evaluate_parsing_JPPNet-s2.py` for pose estimation and body parts parsing respectively.
+5. Results will be shown under **\$(working_directory)/output/**
 
 ## Reference
 
