@@ -17,7 +17,7 @@ from LIP_model import *
 
 N_CLASSES = 20
 INPUT_SIZE = (384, 384)
-DATA_DIRECTORY = './datasets/examples'
+DATA_DIRECTORY = './datasets/examples/images/'
 # DATA_LIST_PATH = './datasets/examples/list/val.txt'
 RESTORE_FROM = './checkpoint/JPPNet-s2'
 OUTPUT_DIR = './output/parsing/val'
