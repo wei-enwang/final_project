@@ -152,7 +152,7 @@ def main():
         msk = decode_labels(parsing_, num_classes=N_CLASSES)
         parsing_im = Image.fromarray(msk[0])
         parsing_im.save('{}/{}_vis.png'.format(OUTPUT_DIR, img_id))
-        cv2.imwrite('{}/{}.png'.format(OUTPUT_DIR, img_id), parsing_[0,:,:,0])
+        # cv2.imwrite('{}/{}.png'.format(OUTPUT_DIR, img_id), parsing_[0,:,:,0])
 
     coord.request_stop()
     coord.join(threads)
