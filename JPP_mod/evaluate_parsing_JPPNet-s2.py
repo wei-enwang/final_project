@@ -17,8 +17,8 @@ from LIP_model import *
 
 N_CLASSES = 20
 INPUT_SIZE = (384, 384)
-DATA_DIRECTORY = './datasets/examples'
-DATA_LIST_PATH = './datasets/examples/list/val.txt'
+DATA_DIRECTORY = './datasets/examples/images/'
+# DATA_LIST_PATH = './datasets/examples/list/val.txt'
 RESTORE_FROM = './checkpoint/JPPNet-s2'
 OUTPUT_DIR = './output/parsing/val'
 if not os.path.exists(OUTPUT_DIR):
@@ -35,7 +35,7 @@ def main():
     h, w = INPUT_SIZE
     # Load reader.
     with tf.name_scope("create_inputs"):
-        reader = ImageReader(DATA_DIRECTORY, DATA_LIST_PATH, None, False, False, coord)
+        reader = ImageReader(DATA_DIRECTORY, None, False, False, coord)
         image = reader.image
         image_rev = tf.reverse(image, tf.stack([1]))
         image_list = reader.image_list
