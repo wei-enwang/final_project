@@ -28,6 +28,8 @@
 
 - [x] 找到適合的抓出關節的 pretrained model 並實作 <br>
 - [ ] 做好可以抓出照片裡的人的 pretrained model <br>
+- [ ] 用 JPP_mod 生成 dataset <br>
+- [ ] 將生成的 dataset 用 rename_img.py 改名 <br>
 - [ ] 用 JPP_mod 對照片 dataset 生成的資料訓練 model <br>
 - [ ] 將主角結合動作
 
