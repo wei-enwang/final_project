@@ -41,7 +41,7 @@ def main():
             except:
                 print(f"error occurs when renaming {DATA_DIRECTORY+'/'+image} !")
         cnt += 1
-        if cnt % 10 == 0:
+        if cnt % 1000 == 0:
             print(f"Already converted {cnt} images...\n")
 
     print(f"All {cnt} images converted!\n")
