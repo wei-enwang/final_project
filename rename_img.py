@@ -34,7 +34,7 @@ def main():
         
         if image_name[4] == "_":
             original_id = image_name.split("_")
-            newName = "/" + renameTable[original_id[0]] + "_" + original_id[1] + file_type
+            newName = "/" + renameTable[original_id[0]] + "_" + original_id[1] + "_new"+ file_type
             
             try:
                 os.rename(DATA_DIRECTORY+'/'+image, DATA_DIRECTORY+newName)
