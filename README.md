@@ -7,7 +7,7 @@
 ## Introduction
 In this project, we implement [Joint Body Parsing & Pose Estimation Network (JPPNet)](https://github.com/Engineering-Course/LIP_JPPNet) and GAN to generate images of an individual showing different poses. Our work is primarily established upon [PyTorch](https://pytorch.org/).
 
-First, we use the pretrained JPPNet model to produce training datasets for our GAN network. JPPNet parses an image and return an image of labeled different body parts and a text file containing the joints. Our network receives two images of the same person along with the data produced by JPPNet. One being the input and another being the target.
+First, we use the pretrained JPPNet model to produce training datasets for our GAN network. JPPNet parses an image and return an image of labeled different body parts and a text file containing the joints' position. Our network receives two images of the same person along with the data produced by JPPNet. One being the input and another being the target.
 
 ## Related resources
 
