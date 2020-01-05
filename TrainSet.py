@@ -20,15 +20,15 @@ class trainset(Dataset):
                 if image_name[4] == "_":
                     original_id = image_name[0:4]
                     
-                    if original_id[0] in imageDict:
-                        imageDict[original_id[0]] += 1
+                    if original_id in imageDict:
+                        imageDict[original_id] += 1
                     else:
-                        imageDict[original_id[0]] = 1
+                        imageDict[original_id] = 1
             except IndexError:
                 continue
         for image in imageDict:
-            for subject in range(dic[image]):
-                for target in range(dic[image]):
+            for subject in range(imageDict[image]):
+                for target in range(imageDict[image]):
                     if subject == target:
                         continue
                     else:
