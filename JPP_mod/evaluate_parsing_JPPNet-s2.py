@@ -27,7 +27,7 @@ if not os.path.exists(OUTPUT_DIR):
 def main():
     # Number of images in the validation set.
     x=os.listdir('./datasets/examples/images')
-    NUM_STEPS=len(x)
+    NUM_STEPS=len(x）
     """Create the model and start the evaluation process."""
     
     # Create queue coordinator.
