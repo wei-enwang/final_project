@@ -8,7 +8,7 @@
 
 > pre-trained model: https://github.com/Engineering-Course/LIP_JPPNet <br>
 > multi-person: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation <br>
-> turn pose into body(MV): https://github.com/xrenaa/Music-Dance-Video-Synthesis
+> turn pose into body(MV): https://github.com/xrenaa/Music-Dance-Video-Synthesis <br>
 > Introduction of market1501 dataset: http://blog.fcj.one/reid-market-1501.html
 
 ### Common problems running this code
