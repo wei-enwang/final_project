@@ -14,7 +14,7 @@ class trainset(Dataset):
         self.images = []
         self.target = []
         imageDict = {}
-        for image in os.listdir(DATA_DIRECTORY):
+        for image in os.listdir(IMAGE_DIRECTORY):
             image_name = image[:-4]
             try:
                 if image_name[4] == "_":
