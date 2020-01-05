@@ -59,7 +59,7 @@ class trainset(Dataset):
         originalJoints = np.zeros((64, 128))
 
         for i in range(0, len(oJoints), 2):
-            originalJoints[oJoints[i]][oJoints[i+1]] = 256
+            originalJoints[int(oJoints[i])][int(oJoints[i+1])] = 255
         
         tJointsFile = open(JOINTS_DIRECTORY+"/"+target+".txt")
         tJoints = tJointsFile.readline().split()
