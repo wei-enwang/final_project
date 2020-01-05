@@ -56,17 +56,17 @@ class trainset(Dataset):
         # convert joints txt file into trainable data
         oJointsFile = open(JOINTS_DIRECTORY+"/"+data+".txt")
         oJoints = oJointsFile.readline().split()
-        originalJoints = np.zeros((64, 128))
+        originalJoints = np.zeros((128, 64))
 
         for i in range(0, len(oJoints), 2):
-            originalJoints[int(oJoints[i])][int(oJoints[i+1])] = 255
+            originalJoints[int(oJoints[i+1])][int(oJoints[i])] = 255
         
         tJointsFile = open(JOINTS_DIRECTORY+"/"+target+".txt")
         tJoints = tJointsFile.readline().split()
-        targetJoints = np.zeros((64, 128)) 
+        targetJoints = np.zeros((128, 64)) 
 
         for i in range(0, len(tJoints), 2):
-            targetJoints[tJoints[i]][tJoints[i+1]] = 256 
+            targetJoints[int(tJoints[i+1])][int(tJoints[i])] = 255
 
         # transform joints array 
         original_img_joints = self.transform(originalJoints)
