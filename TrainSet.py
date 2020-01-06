@@ -27,6 +27,7 @@ class trainset(Dataset):
                      
                     if original_id in imageDict:
                         imageDict[original_id] += 1
+                    # change the line below to "else: " to train the entire dataset 
                     elif original_id < "0099":
                         imageDict[original_id] = 1
             except IndexError:
