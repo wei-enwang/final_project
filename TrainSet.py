@@ -19,10 +19,10 @@ class trainset(Dataset):
             try:
                 if image_name[4] == "_":
                     original_id = image_name[0:4]
-                    
+                     
                     if original_id in imageDict:
                         imageDict[original_id] += 1
-                    else:
+                    elif original_id < "0099":
                         imageDict[original_id] = 1
             except IndexError:
                 continue
