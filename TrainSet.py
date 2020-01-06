@@ -1,14 +1,19 @@
 import os
+import torch
 import numpy as np
 from PIL import Image
+from torch.utils.data.dataset import Dataset
 
-IMAGE_DIRECTORY = "./JPP_mod/output/parsing/val"
-POSE_DIRECTORY = "./JPP_mod/output/parsing/val"
-JOINTS_DIRECTORY = "./JPP_mod/output/pose/val"
+IMAGE_DIRECTORY = "./datasets/train_original"
+POSE_DIRECTORY = "./datasets/train_pose"
+JOINTS_DIRECTORY = "./datasets/train_joint"
 
 class trainset(Dataset):
 
-    def __init__(self, transform):
+    def __init__(self, transformRGB, transformGrey):
+
+        self.transformRGB = transformRGB
+        self.transformGrey = transformGrey
 
         # create dataset lists for training
         self.images = []
@@ -35,7 +40,6 @@ class trainset(Dataset):
                         self.images.append(image+"_"+str(subject))
                         self.target.append(image+"_"+str(target))
 
-        self.transform = transform
 
     def __getitem__(self, index):
 
@@ -44,14 +48,15 @@ class trainset(Dataset):
         # load dataset and target images and transform them
         oi = Image.open(IMAGE_DIRECTORY+"/"+data+".jpg").convert('RGB')
         oip = Image.open(POSE_DIRECTORY+"/"+data+".png").convert('RGB')
+        print('oi type:', oi)
         
         ti = Image.open(IMAGE_DIRECTORY+"/"+target+".jpg").convert('RGB')
         tip = Image.open(POSE_DIRECTORY+"/"+target+".png").convert('RGB')
 
-        original_img = self.transform(oi)
-        original_img_pose = self.transform(oip)
-        target_img = self.transform(ti)
-        target_img_pose = self.transform(tip)
+        oi = self.transformRGB(oi)
+        oip = self.transformRGB(oip)
+        ti = self.transformRGB(ti)
+        tip = self.transformRGB(tip)
 
         # convert joints txt file into trainable data
         oJointsFile = open(JOINTS_DIRECTORY+"/"+data+".txt")
@@ -68,11 +73,14 @@ class trainset(Dataset):
         for i in range(0, len(tJoints), 2):
             targetJoints[int(tJoints[i+1])][int(tJoints[i])] = 255
 
-        # transform joints array 
-        original_img_joints = self.transform(originalJoints)
-        target_img_joints = self.transform(targetJoints)
+        # transform joints array
+        originalJoints = Image.fromarray(originalJoints)
+        originalJoints = self.transformGrey(originalJoints)
+        
+        targetJoints = Image.fromarray(targetJoints)
+        targetJoints = self.transformGrey(targetJoints)
 
-        return original_img, original_img_pose, original_img_joints, target_img, target_img_pose, target_img_joints
+        return oi, oip, originalJoints, ti, tip, targetJoints
 
     def __len__(self):
         return len(self.images)
