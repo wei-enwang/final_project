@@ -2,13 +2,14 @@ import os
 import torch
 import torchvision
 import torch.nn as nn
-import torch.nn.functional as F
 from torchvision import transforms
 from torchvision.utils import save_image
 from torch.autograd import Variable
+from torch.utils.data import DataLoader
 import argparse
-import dataset
+import TrainSetSmall
 import models
+import Visualizer
 
 def load_checkpoint(g_path, d_path):
 
@@ -38,27 +39,29 @@ def load_checkpoint(g_path, d_path):
     
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--batch_size", type = int, default = 64)
+parser.add_argument("--batch_size", type = int, default = 128)
 parser.add_argument("--n_epochs", type = int, default = 3)
-parser.add_argument("--z_dimension", type = int, default = 100)
+parser.add_argument("--mode", type = str, default = 'train')
 args = parser.parse_args()
 print(args)
 
 
+print('start loading datasets...')
+transformRGB = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = (0.5, 0.5, 0.5), std = (0.5, 0.5, 0.5))])
+transformGrey = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = (0.5,), std = (0.5,))])
 
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = (0.5, 0.5, 0.5), std = (0.5, 0.5, 0.5))])
+train_data = TrainSetSmall.trainset(transformRGB = transformRGB, transformGrey = transformGrey)
+print('number of data points: ', len(train_data))
 
-train_data = dataset.dataloader(transform = transform, mode = 'train')
-#test_data = dataset.dataloader(mode = 'test')
+trainloader = DataLoader(dataset = train_data, batch_size = args.batch_size, shuffle = False)
 
-trainloader = DataLoader(dataset = train_data, batch_size = args.batch_size, shuffle = True)
-#testloader = DataLoader(dataset = test_data, batch_size = args.batch_size, shuffle = True)
+print('datasets loading finished!')
 
 current_epoch = 0
 
-if os.path.exists('./checkpoint/generator_checkpoint.pth') and os.path.exists('./checkpoint/discriminator_checkpoint.pth'):
-    g_path = './checkpoint/generator_checkpoint.pth'
-    d_path = './checkpoint/discriminator_checkpoint.pth'
+if os.path.exists('./checkpoints/generator_checkpoint.pth') and os.path.exists('./checkpoints/discriminator_checkpoint.pth'):
+    g_path = './checkpoints/generator_checkpoint.pth'
+    d_path = './checkpoints/discriminator_checkpoint.pth'
     D, G, d_optimizer, g_optimizer, current_epoch = load_checkpoint(g_path, d_path)
     
 else:
@@ -78,52 +81,60 @@ criterion = nn.BCELoss()
 if current_epoch >= args.n_epochs:
     raise Exception('training has finished!')
 
+print('start training!')
+
 for epoch in range(current_epoch, args.n_epochs):
     for i, (original_img, original_img_pose, original_img_joints, target_img, target_img_pose, target_img_joints) in enumerate(trainloader):
-        num_img = original_img.size(0)#batch_size
-        #img.size is [batch_size, 64*128]
+        print(i)
+        assert original_img.size() == original_img_pose.size() == target_img.size() == target_img_pose.size() and original_img_joints.size() == target_img_joints.size(), "data-points size error"
         
-        assert num_img == args.batch_size, "batch_size not matched" # check if there are errors in dataset loader
+        num_img = original_img.size(0)#batch_size
+        #img.size  = [B, C, H, W]
 
-        # flatten the images
+        '''# flatten the images
         original_img = original_img.view(num_img, -1)
         original_img_pose = original_img_pose.view(num_img, -1)
         original_img_joints = original_img_joints.view(num_img, -1)
         
         target_img = target_img.view(num_img, -1)
         target_img_pose = target_img_pose.view(num_img, -1)
-        target_img_joints = target_img_joints.view(num_img, -1)
+        target_img_joints = target_img_joints.view(num_img, -1)'''
 
         ##train discriminator
         
         if torch.cuda.is_available():
             target_img = Variable(target_img).cuda()
-            target_label = Variable(torch.ones(num_img)).cuda()
+            real_label = Variable(torch.ones(num_img)).cuda()
             fake_label = Variable(torch.zeros(num_img)).cuda()
         else:
             target_img = Variable(target_img)
-            target_label = Variable(torch.ones(num_img))
+            real_label = Variable(torch.ones(num_img))
             fake_label = Variable(torch.zeros(num_img))
             
         #compute loss of real images
         real_out = D(target_img)
+        real_out = torch.squeeze(real_out)
         d_loss_real = criterion(real_out, real_label)
         real_scores = real_out #closer to 1 means better
 
         #compute loss of fake images
-        z = torch.cat((original_img, target_img_joints), 0)####which we can test
+        z = torch.cat((original_img, target_img_joints), 1)
         if torch.cuda.is_available():
             z = z.cuda()
-        
+
         fake_img = G(z)
-        fake_out = D(fake_img)
+        fake_img_original, fake_img_pose = fake_img.split([3, 1], dim = 1)
+        #print('a:', fake_img_original.size())
+        #print('b:', fake_img_pose.size())
+        fake_out = D(fake_img_original)
+        fake_out = torch.squeeze(fake_out)
         d_loss_fake = criterion(fake_out, fake_label)
         fake_scores = fake_out #closer to 0 means better
 
         #back-propagation and optimization
         d_loss = d_loss_real + d_loss_fake
         d_optimizer.zero_grad()
-        d_loss.backward()
+        d_loss.backward(retain_graph = True)
         d_optimizer.step()
 
 
@@ -138,11 +149,12 @@ for epoch in range(current_epoch, args.n_epochs):
         g_optimizer.step()
 
         if (i + 1) % 100 == 0:
-            print("Epoch: {} / {}, d_loss: {:.6f}, g_loss: {:.6f}, D real: {:.6f}, D fake: {:.6f}".format(
-                epoch, args.n_epochs, d_loss.data, g_loss.data, real_scores.data.mean(), fake_scores.data.mean()))
-    
-    #fake_images = to_img(fake_img.cpu().data)
-    #save_image(fake_images, './img/fake_images-{}.png'.format(epoch+1))
+            print("iteration: {} / {}, Epoch: {} / {}, d_loss: {:.6f}, g_loss: {:.6f}, D real: {:.6f}, D fake: {:.6f}".format(
+                str((i+1)*args.batch_size), str(len(train_data)), epoch, args.n_epochs, d_loss.data, g_loss.data, real_scores.data.mean(), fake_scores.data.mean()))
+
+        
+    fake_img_original = Visualizer.denorm(fake_img_original.cpu().data)
+    save_image(fake_img_original, './img/fake_images_original-{}.png'.format(epoch+1))
 
     torch.save({'epoch': finished_epoch, 'model_state_dict': G.state_dict(), 'optimizer_state_dict': g_optimizer.state_dict()}, './checkpoints/generator_checkpoint.pth')
     torch.save({'epoch': finished_epoch, 'model_state_dict': D.state_dict(), 'optimizer_state_dict': d_optimizer.state_dict()}, './checkpoints/iscriminator_checkpoint.pth')

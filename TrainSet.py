@@ -10,7 +10,8 @@ JOINTS_DIRECTORY = "./datasets/train_joint"
 
 class trainset(Dataset):
 
-    def __init__(self, transformRGB, transformGrey):
+    # datasize should be in string format "0nnn"
+    def __init__(self, transformRGB, transformGrey, datasize="0750"):
 
         self.transformRGB = transformRGB
         self.transformGrey = transformGrey
@@ -28,7 +29,7 @@ class trainset(Dataset):
                     if original_id in imageDict:
                         imageDict[original_id] += 1
                     # change the line below to "else: " to train the entire dataset 
-                    elif original_id < "0099":
+                    elif original_id < datasize:
                         imageDict[original_id] = 1
             except IndexError:
                 continue

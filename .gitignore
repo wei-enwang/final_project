@@ -3,4 +3,5 @@ JPP_mod/datasets
 JPP_mod/output
 *.pyc
 .vscode
-./dataset
+datasets
+checkpoints
