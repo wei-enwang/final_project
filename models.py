@@ -42,7 +42,8 @@ class discriminator(nn.Module):
                                          nn.BatchNorm2d(3),
                                          nn.Conv2d(in_channels = 3, out_channels = 16, kernel_size = 3, stride = 2, padding = 1),
                                          nn.ReLU(True),
-                                         nn.BatchNorm2d(16))
+                                         nn.BatchNorm2d(16),
+                                         nn.Dropout(0.5))
         init_weights(self.conv1)
         
         self.conv2 = nn.Sequential(nn.Conv2d(in_channels = 16, out_channels = 16, kernel_size = 3, stride = 1, padding = 1),
@@ -50,18 +51,20 @@ class discriminator(nn.Module):
                                          nn.BatchNorm2d(16),
                                          nn.Conv2d(in_channels = 16, out_channels = 32, kernel_size = 3, stride = 2, padding = 1),
                                          nn.ReLU(True),
-                                         nn.BatchNorm2d(32))
+                                         nn.BatchNorm2d(32),
+                                         nn.Dropout(0.5))
         init_weights(self.conv2)
         
-        self.conv3 = nn.Sequential(nn.Conv2d(in_channels = 32, out_channels = 32, kernel_size = 3, stride = 1, padding = 1),
+        '''self.conv3 = nn.Sequential(nn.Conv2d(in_channels = 32, out_channels = 32, kernel_size = 3, stride = 1, padding = 1),
                                          nn.ReLU(True),
                                          nn.BatchNorm2d(32),
                                          nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = 3, stride = 2, padding = 1),
                                          nn.ReLU(True),
-                                         nn.BatchNorm2d(64))
+                                         nn.BatchNorm2d(64),
+                                         nn.Dropout(0.5))
         init_weights(self.conv3)
         
-        '''self.conv4 = nn.Sequential(nn.Conv2d(in_channels = 64, out_channels = 64, kernel_size = 3, stride = 1, padding = 1),
+        self.conv4 = nn.Sequential(nn.Conv2d(in_channels = 64, out_channels = 64, kernel_size = 3, stride = 1, padding = 1),
                                          nn.ReLU(True),
                                          nn.BatchNorm2d(64),
                                          nn.Conv2d(in_channels = 64, out_channels = 128, kernel_size = 3, stride = 2, padding = 1),
@@ -77,9 +80,8 @@ class discriminator(nn.Module):
                                          nn.BatchNorm2d(256))
         init_weights(self.conv5)'''
 
-        self.linear = nn.Sequential(nn.Linear(64 * 16 * 8, 64 * 2),
-                                    nn.ReLU(True),
-                                    nn.Linear(128, 1))
+        self.linear = nn.Sequential(nn.Linear(32 * 32 * 16, 1), nn.Dropout(0.5))
+
         init_weights(self.linear)
         
         self.sigmoid = nn.Sigmoid()
@@ -87,8 +89,7 @@ class discriminator(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         x = self.conv2(x)
-        x = self.conv3(x)
-        x = x.view(-1, 64 * 16 * 8)
+        x = x.view(-1, 32 * 32 * 16)
         x = self.linear(x)
         x = self.sigmoid(x)
         return x
@@ -99,20 +100,34 @@ class generator(nn.Module):
     def __init__(self):
         super().__init__()
                 
-        self.dconv_down1 = double_conv(4, 64)
+        self.dconv_down1 = double_conv(6, 64)
+        init_weights(self.dconv_down1)
+        
         self.dconv_down2 = double_conv(64, 128)
+        init_weights(self.dconv_down2)
+        
         self.dconv_down3 = double_conv(128, 256)
-        self.dconv_down4 = double_conv(256, 512)        
+        init_weights(self.dconv_down3)
+        
+        self.dconv_down4 = double_conv(256, 512)
+        init_weights(self.dconv_down4)
 
         self.maxpool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)        
         
         self.dconv_up3 = double_conv(256 + 512, 256)
+        init_weights(self.dconv_up3)
+        
         self.dconv_up2 = double_conv(128 + 256, 128)
+        init_weights(self.dconv_up2)
+        
         self.dconv_up1 = double_conv(128 + 64, 64)
+        init_weights(self.dconv_up1)
         
-        self.conv_last = nn.Conv2d(64, 4, kernel_size = 1, stride = 1, padding = 0)
+        self.conv_last = nn.Conv2d(64, 6, kernel_size = 1, stride = 1, padding = 0)
+        init_weights(self.conv_last)
         
+        self.tanh = nn.Tanh()
         
     def forward(self, x):
         conv1 = self.dconv_down1(x)
@@ -140,6 +155,8 @@ class generator(nn.Module):
         x = self.dconv_up1(x)
         
         out = self.conv_last(x)
+
+        out = self.tanh(out)
         
         return out
     
@@ -170,6 +187,3 @@ class basic_generator(nn.Module):
     def forward(self, x):
         x = self.gen(x)
         return x
-
-
-        
