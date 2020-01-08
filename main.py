@@ -158,11 +158,3 @@ for epoch in range(current_epoch, args.n_epochs):
 
     torch.save({'epoch': finished_epoch, 'model_state_dict': G.state_dict(), 'optimizer_state_dict': g_optimizer.state_dict()}, './checkpoints/generator_checkpoint.pth')
     torch.save({'epoch': finished_epoch, 'model_state_dict': D.state_dict(), 'optimizer_state_dict': d_optimizer.state_dict()}, './checkpoints/iscriminator_checkpoint.pth')
-        
-        
-
-
-
-
-
-        
