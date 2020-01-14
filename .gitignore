@@ -4,4 +4,3 @@ JPP_mod/output
 *.pyc
 .vscode
 datasets
-checkpoints
