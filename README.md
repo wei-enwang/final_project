@@ -33,11 +33,11 @@ First, we use the pretrained JPPNet model to produce training datasets for our G
 ## TODO
 
 - [x] 找到適合的抓出關節的 pretrained model 並實作 <br>
-- [ ] 做好可以抓出照片裡的人的 pretrained model <br>
+- [x] 做好可以抓出照片裡的人的 pretrained model <br>
 - [x] 用 JPP_mod 生成 dataset <br>
 - [x] 將生成的 dataset 用 rename_img.py 改名 <br>
-- [ ] 用 JPP_mod 對照片 dataset 生成的資料訓練 model <br>
-- [ ] 將主角結合動作
+- [x] 用 JPP_mod 對照片 dataset 生成的資料訓練 model <br>
+- [x] 將主角結合動作
 
 ## How to use our code?
 
