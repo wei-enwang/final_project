@@ -40,7 +40,7 @@ First, we use the pretrained JPPNet model to produce training datasets for our G
 - [x] 將主角結合動作
 
 ## How to use our code?
-**\$important!!/**
+**\important!!**
 Recommandation:git clone this project and it will be much easier to finish!!
 ####Our Model
 You need to download these two files and place it under checkpoints(at easydisplay)
