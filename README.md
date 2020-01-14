@@ -46,7 +46,7 @@ Recommandation:git clone this project and it will be much easier to enjoy our wo
 
 #### Our Model
 
-You need to download these two files and place it under checkpoints(at easydisplay)
+You need to download these two files and place it under checkpoints(a directory under easydisplay, if you don't have this directory yet, create one)
 
 https://drive.google.com/file/d/18-kL51Qf2SKSMROJ80fOPWfPu_wkRKDh/view?usp=sharing
 
