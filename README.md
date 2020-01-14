@@ -45,7 +45,7 @@ First, we use the pretrained JPPNet model to produce training datasets for our G
 
 > In our case, **\$(working_directory) = /JPP_mod**
 
-1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **\$(working_directory)/checkpoint/**
+1. Download pretrained model from[JPPNet google drive](https://drive.google.com/file/d/1BFVXgeln-bek8TCbRjN6utPAgRE0LJZg/view) and place it under **\$(working_directory)/checkpoint/**(There are two checkpoint now:one in JPP_mod,one in easydisplay)
 2. The images targeted for operation must be under **\$(working_directory)/datasets/examples/image/**
 3. Go to file **valuate_pose_JPPNet-s2.py** and **evaluate_parsing_JPPNet-s2.py** and change variable `NUM_STEPS` to the number of images under **\$(working_directory)/datasets/examples/image/**
 4. Run `evaluate_pose_JPPNet-s2.py` and `evaluate_parsing_JPPNet-s2.py` for pose estimation and body parts parsing respectively.
